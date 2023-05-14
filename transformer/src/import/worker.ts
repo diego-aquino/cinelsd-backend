@@ -18,11 +18,6 @@ async function importNormalizedEntity<Entity extends { id: string }>(task: Impor
   const { client, entity } = task;
   const stringifiedEntity = JSON.stringify(entity);
   await client.set(entity.id, stringifiedEntity);
-
-  const savedEntity = await client.get(entity.id);
-  if (savedEntity === null) {
-    throw new Error(`Failed to save entity ${entity.id}.`);
-  }
 }
 
 async function importNormalizedEntitiesFromFile<Entity extends { id: string }>(client: RedisClient, fileName: string) {
