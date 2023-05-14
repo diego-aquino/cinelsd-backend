@@ -4,6 +4,8 @@ import { WriteStream, createWriteStream } from 'node:fs';
 import fastq from 'fastq';
 import os from 'os';
 import { closeWriteStream, writeToStream } from '../utils/streams';
+import { roundByDecimals } from '../utils/numbers';
+import { withTrackedTime } from '../utils/time';
 
 function parseStringifiedRawEntity<ParsedValue>(stringifiedRawEntity: string) {
   return eval(`(${stringifiedRawEntity})`) as ParsedValue;
@@ -42,30 +44,33 @@ async function exportNormalizedEntitiesToFile<RawEntity, Entity>(
   writeStream.on('error', (error) => console.error(error));
 
   type Task = ExportNormalizedEntityTask<RawEntity, Entity>;
+
   const concurrency = os.cpus().length;
-  const queue: fastq.queue<Task> = fastq.promise(exportNormalizedEntity, concurrency);
+  const queue: fastq.queueAsPromised<Task> = fastq.promise(exportNormalizedEntity, concurrency);
 
-  const initialTime = Date.now();
+  const taskPromises: Promise<void>[] = [];
 
-  for await (const key of client.scanIterator({ MATCH: '*' })) {
-    queue.push({ client, key, writeStream, normalizeEntity });
-  }
+  const elapsedTimeInSeconds = await withTrackedTime(async () => {
+    for await (const key of client.scanIterator({ MATCH: '*' })) {
+      const taskPromise = queue.push({ client, key, writeStream, normalizeEntity });
+      taskPromises.push(taskPromise);
+    }
 
-  while (queue.length() > 0) {
-    await queue.drain();
-  }
-  await closeWriteStream(writeStream);
+    await Promise.all(taskPromises);
+    await closeWriteStream(writeStream);
+  });
 
-  const elapsedTime = Date.now() - initialTime;
-  const elapsedTimeInSeconds = elapsedTime / 1000;
-  const roundedElapsedTimeInSeconds = Math.round(elapsedTimeInSeconds * 100) / 100;
-  console.log(`Exported ${numberOfExportedEntities} entities to ${fileName} in ${roundedElapsedTimeInSeconds}s.`);
+  const numberOfExportedEntities = taskPromises.length;
+
+  console.log(
+    `Exported ${numberOfExportedEntities} entities to ${fileName} in ${roundByDecimals(elapsedTimeInSeconds, 2)}s.`,
+  );
 }
 
 export async function exportNormalizedTitles() {
   const client = await initializeClient({ database: 1 });
 
-  await exportNormalizedEntitiesToFile<RawTitle, Title>(client, './titles.txt', (rawTitle) => ({
+  await exportNormalizedEntitiesToFile<RawTitle, Title>(client, './local/titles.txt', (rawTitle) => ({
     id: rawTitle.tconst,
     primaryTitle: rawTitle.primaryTitle,
     averageRating: rawTitle.averageRating,
@@ -81,7 +86,7 @@ export async function exportNormalizedTitles() {
 export async function exportNormalizedMainActors() {
   const client = await initializeClient({ database: 2 });
 
-  await exportNormalizedEntitiesToFile<RawMainActor, MainActor>(client, './main-actors.txt', (rawMainActor) => ({
+  await exportNormalizedEntitiesToFile<RawMainActor, MainActor>(client, './local/main-actors.txt', (rawMainActor) => ({
     id: rawMainActor.tconst,
     actors: rawMainActor.actors.map((rawActor) => ({
       id: rawActor.nconst,
@@ -97,7 +102,7 @@ export async function exportNormalizedMainActors() {
 export async function exportNormalizedActors() {
   const client = await initializeClient({ database: 3 });
 
-  await exportNormalizedEntitiesToFile<RawActor, Actor>(client, './actors.txt', (rawActor) => ({
+  await exportNormalizedEntitiesToFile<RawActor, Actor>(client, './local/actors.txt', (rawActor) => ({
     id: rawActor.nconst,
     primaryName: rawActor.primaryName,
     titles: rawActor.knownForTitles.split(','),

@@ -6,8 +6,8 @@ import os from 'os';
 
 import { Actor, MainActor, RedisClient, Title } from '../types';
 import { closeReadStream } from '../utils/streams';
-
-let numberOfImportedEntities = 0;
+import { withTrackedTime } from '../utils/time';
+import { roundByDecimals } from '../utils/numbers';
 
 interface ImportNormalizedEntityTask<Entity> {
   client: RedisClient;
@@ -23,8 +23,6 @@ async function importNormalizedEntity<Entity extends { id: string }>(task: Impor
   if (savedEntity === null) {
     throw new Error(`Failed to save entity ${entity.id}.`);
   }
-
-  numberOfImportedEntities++;
 }
 
 async function importNormalizedEntitiesFromFile<Entity extends { id: string }>(client: RedisClient, fileName: string) {
@@ -35,40 +33,42 @@ async function importNormalizedEntitiesFromFile<Entity extends { id: string }>(c
 
   type Task = ImportNormalizedEntityTask<Entity>;
   const concurrency = os.cpus().length;
-  const queue: fastq.queue<Task> = fastq.promise(importNormalizedEntity, concurrency);
+  const queue: fastq.queueAsPromised<Task> = fastq.promise(importNormalizedEntity, concurrency);
 
-  const initialTime = Date.now();
+  const taskPromises: Promise<void>[] = [];
 
-  for await (const stringifiedEntity of entityReader) {
-    const entity = JSON.parse(stringifiedEntity) as Entity;
-    queue.push({ client, entity });
-  }
+  const elapsedTimeInSeconds = await withTrackedTime(async () => {
+    for await (const stringifiedEntity of entityReader) {
+      const entity = JSON.parse(stringifiedEntity) as Entity;
+      const taskPromise = queue.push({ client, entity });
+      taskPromises.push(taskPromise);
+    }
 
-  while (queue.length() > 0) {
-    await queue.drain();
-  }
-  await closeReadStream(readStream);
+    await Promise.all(taskPromises);
+    await closeReadStream(readStream);
+  });
 
-  const elapsedTime = Date.now() - initialTime;
-  const elapsedTimeInSeconds = elapsedTime / 1000;
-  const roundedElapsedTimeInSeconds = Math.round(elapsedTimeInSeconds * 100) / 100;
-  console.log(`Imported ${numberOfImportedEntities} entities from ${fileName} in ${roundedElapsedTimeInSeconds}s.`);
+  const numberOfImportedEntities = taskPromises.length;
+
+  console.log(
+    `Imported ${numberOfImportedEntities} entities from ${fileName} in ${roundByDecimals(elapsedTimeInSeconds, 2)}s.`,
+  );
 }
 
 export async function importNormalizedTitles() {
   const client = await initializeClient({ database: 1 });
-  await importNormalizedEntitiesFromFile<Title>(client, './titles.txt');
+  await importNormalizedEntitiesFromFile<Title>(client, './local/titles.txt');
   await client.disconnect();
 }
 
 export async function importNormalizedMainActors() {
   const client = await initializeClient({ database: 2 });
-  await importNormalizedEntitiesFromFile<MainActor>(client, './main-actors.txt');
+  await importNormalizedEntitiesFromFile<MainActor>(client, './local/main-actors.txt');
   await client.disconnect();
 }
 
 export async function importNormalizedActors() {
   const client = await initializeClient({ database: 3 });
-  await importNormalizedEntitiesFromFile<Actor>(client, './actors.txt');
+  await importNormalizedEntitiesFromFile<Actor>(client, './local/actors.txt');
   await client.disconnect();
 }
