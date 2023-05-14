@@ -44,20 +44,20 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 
 #### Normalizar dados (export)
 
-1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados brutos, substituindo a pasta `normalized` por `raw`.
+1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados brutos.
 
    ```yaml
    volumes:
      - ./transformer/data/raw:/data
    ```
 
-2. Da raiz deste repositório, inicie o servido de Redis, se já não estiver rodando.
+2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
    docker compose up cinelsd-redis
    ```
 
-3. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal de dentro da pasta `transformer`:
+3. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
 
    ```bash
    pnpm run export
@@ -67,26 +67,49 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 
 #### Importar dados normalizados
 
-1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados normalizados, substituindo a pasta `raw` por `normalized`.
+1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados normalizados.
 
    ```yaml
    volumes:
      - ./transformer/data/normalized:/data
    ```
 
-2. Da raiz deste repositório, inicie o servido de Redis, se já não estiver rodando.
+2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
    docker compose up cinelsd-redis
    ```
 
-3. Após o serviço do Redis ter inicializado, execute o comando de importação em outro terminal de dentro da pasta `transformer`:
+3. Após o serviço do Redis ter inicializado, execute o comando de importação em outro terminal, de dentro da pasta `transformer`:
 
    ```bash
    pnpm run import
    ```
 
    Após a execução desse comando, os dados normalizados terão sido importados de `local/actors.txt`, `local/movies.txt` e `local/movie-main-actors.txt` para a instância do Redis em execução.
+
+#### Verificar referências a filmes
+
+1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados normalizados.
+
+   ```yaml
+   volumes:
+     - ./transformer/data/normalized:/data
+   ```
+
+2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
+
+   ```bash
+   docker compose up cinelsd-redis
+   ```
+
+3. Após o serviço do Redis ter inicializado, execute o comando de verificação em outro terminal, de dentro da pasta `transformer`:
+
+   ```bash
+   pnpm run check-references
+   ```
+
+   Após a execução desse comando, referências de atores a filmes não existentes terão sido removidas, assim como atores que ficaram sem filmes associados após a remoção das referências inválidas.
 
 ### Servidor
 
@@ -106,13 +129,13 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
      - ./transformer/data/normalized:/data
    ```
 
-3. Da raiz deste repositório, inicie o servido de Redis, se já não estiver rodando.
+3. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
    docker compose up cinelsd-redis
    ```
 
-4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal de dentro da pasta `server`:
+4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server`:
 
    ```bash
    go run ./src
