@@ -18,8 +18,6 @@ interface ExportNormalizedEntityTask<RawEntity, Entity> {
   normalizeEntity: (rawEntity: RawEntity) => Entity;
 }
 
-let numberOfExportedEntities = 0;
-
 async function exportNormalizedEntity<RawEntity, Entity>(task: ExportNormalizedEntityTask<RawEntity, Entity>) {
   const { client, key, writeStream, normalizeEntity } = task;
 
@@ -31,8 +29,6 @@ async function exportNormalizedEntity<RawEntity, Entity>(task: ExportNormalizedE
   const rawEntity = parseStringifiedRawEntity<RawEntity>(stringifiedRawEntity);
   const normalizedEntity = normalizeEntity(rawEntity);
   await writeToStream(writeStream, JSON.stringify(normalizedEntity) + '\n');
-
-  numberOfExportedEntities++;
 }
 
 async function exportNormalizedEntitiesToFile<RawEntity, Entity>(
