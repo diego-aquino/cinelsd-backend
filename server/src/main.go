@@ -57,9 +57,10 @@ func createRedisClients() (*redis.Client, *redis.Client, *redis.Client) {
 
 func sendStringifiedEntity(stringifiedEntity string, context *gin.Context) {
 	if len(stringifiedEntity) > 0 {
-		context.JSON(http.StatusOK, stringifiedEntity)
+		context.Writer.Header().Set("Content-Type", "application/json")
+		context.String(http.StatusOK, stringifiedEntity)
 	} else {
-		context.JSON(http.StatusNotFound, nil)
+		context.JSON(http.StatusOK, nil)
 	}
 }
 

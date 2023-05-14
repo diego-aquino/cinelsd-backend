@@ -95,7 +95,7 @@ export async function exportNormalizedMovieMainActors() {
         id: rawActor.nconst,
         ordering: rawActor.ordering,
         category: rawActor.category,
-        characters: rawActor.characters.split(','),
+        characters: /\N/.test(rawActor.characters) ? [] : (JSON.parse(rawActor.characters) as string[]),
       })),
     }),
   );
