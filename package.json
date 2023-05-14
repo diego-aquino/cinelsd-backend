@@ -1,0 +1,23 @@
+{
+  "name": "cinelsd-backend",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "server": "tsx src/server.ts",
+    "export": "tsx src/export/index.ts",
+    "import": "tsx src/import/index.ts"
+  },
+  "dependencies": {
+    "redis": "^4.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.1.4",
+    "fastq": "^1.15.0",
+    "piscina": "^3.2.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4"
+  }
+}

@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  cinelsd-redis:
+    image: redis:7.2-rc1-alpine3.18
+    container_name: cinelsd-redis
+    networks:
+      - cinelsd
+    volumes:
+      - ./data/normalized:/data
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: redis-cli ping | grep PONG
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+networks:
+  cinelsd:
+    driver: bridge
