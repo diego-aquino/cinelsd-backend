@@ -7,7 +7,7 @@ services:
     networks:
       - cinelsd
     volumes:
-      - ./data/normalized:/data
+      - ./transformer/data/normalized:/data
     ports:
       - 6379:6379
     healthcheck:
