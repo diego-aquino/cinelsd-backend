@@ -7,8 +7,8 @@ async function main() {
   });
 
   await Promise.all([
-    piscina.run({}, { name: 'exportNormalizedTitles' }),
-    piscina.run({}, { name: 'exportNormalizedMainActors' }),
+    piscina.run({}, { name: 'exportNormalizedMovies' }),
+    piscina.run({}, { name: 'exportNormalizedMovieMainActors' }),
     piscina.run({}, { name: 'exportNormalizedActors' }),
   ]);
 }

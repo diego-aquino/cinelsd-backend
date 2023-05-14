@@ -4,7 +4,7 @@ import readline from 'node:readline/promises';
 import fastq from 'fastq';
 import os from 'os';
 
-import { Actor, MainActor, RedisClient, Title } from '../types';
+import { Actor, MovieMainActors, RedisClient, Movie } from '../types';
 import { closeReadStream } from '../utils/streams';
 import { withTrackedTime } from '../utils/time';
 import { roundByDecimals } from '../utils/numbers';
@@ -16,8 +16,8 @@ interface ImportNormalizedEntityTask<Entity> {
 
 async function importNormalizedEntity<Entity extends { id: string }>(task: ImportNormalizedEntityTask<Entity>) {
   const { client, entity } = task;
-  const stringifiedTitle = JSON.stringify(entity);
-  await client.set(entity.id, stringifiedTitle);
+  const stringifiedEntity = JSON.stringify(entity);
+  await client.set(entity.id, stringifiedEntity);
 
   const savedEntity = await client.get(entity.id);
   if (savedEntity === null) {
@@ -55,15 +55,15 @@ async function importNormalizedEntitiesFromFile<Entity extends { id: string }>(c
   );
 }
 
-export async function importNormalizedTitles() {
+export async function importNormalizedMovies() {
   const client = await initializeClient({ database: 1 });
-  await importNormalizedEntitiesFromFile<Title>(client, './local/titles.txt');
+  await importNormalizedEntitiesFromFile<Movie>(client, './local/movies.txt');
   await client.disconnect();
 }
 
-export async function importNormalizedMainActors() {
+export async function importNormalizedMovieMainActors() {
   const client = await initializeClient({ database: 2 });
-  await importNormalizedEntitiesFromFile<MainActor>(client, './local/main-actors.txt');
+  await importNormalizedEntitiesFromFile<MovieMainActors>(client, './local/movie-main-actors.txt');
   await client.disconnect();
 }
 

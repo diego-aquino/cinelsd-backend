@@ -2,7 +2,7 @@ import { createClient } from 'redis';
 
 export type RedisClient = ReturnType<typeof createClient>;
 
-export interface RawTitle {
+export interface RawMovie {
   tconst: string;
   primaryTitle: string;
   averageRating: number;
@@ -12,35 +12,39 @@ export interface RawTitle {
   genres: string;
 }
 
-export interface Title {
+export interface Movie {
   id: string;
-  primaryTitle: string;
+  title: string;
   averageRating: number;
   numberOfVotes: number;
   lengthInMinutes: number | null;
   startYear: number;
-  genres: string;
+  genres: string[];
 }
 
-export interface RawMainActor {
+interface RawMovieMainActor {
   tconst: string;
-  actors: {
-    tconst: string;
-    ordering: number;
-    nconst: string;
-    category: string;
-    characters: string;
-  }[];
+  ordering: number;
+  nconst: string;
+  category: string;
+  characters: string;
 }
 
-export interface MainActor {
+export interface RawMovieMainActors {
+  tconst: string;
+  actors: RawMovieMainActor[];
+}
+
+interface MovieMainActor {
   id: string;
-  actors: {
-    id: string;
-    ordering: number;
-    category: string;
-    characters: string[];
-  }[];
+  ordering: number;
+  category: string;
+  characters: string[];
+}
+
+export interface MovieMainActors {
+  id: string;
+  actors: MovieMainActor[];
 }
 
 export interface RawActor {
@@ -51,6 +55,6 @@ export interface RawActor {
 
 export interface Actor {
   id: string;
-  primaryName: string;
-  titles: string[];
+  name: string;
+  movies: string[];
 }

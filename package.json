@@ -8,7 +8,8 @@
   "scripts": {
     "server": "tsx src/server.ts",
     "export": "tsx src/export/index.ts",
-    "import": "tsx src/import/index.ts"
+    "import": "tsx src/import/index.ts",
+    "types:check": "tsc --noEmit"
   },
   "dependencies": {
     "redis": "^4.6.6"

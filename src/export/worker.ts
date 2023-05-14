@@ -1,4 +1,4 @@
-import { RawActor, Actor, RawMainActor, MainActor, RawTitle, Title, RedisClient } from '../types';
+import { RawActor, Actor, RawMovieMainActors, MovieMainActors, RawMovie, Movie, RedisClient } from '../types';
 import { initializeClient } from '../utils/redis';
 import { WriteStream, createWriteStream } from 'node:fs';
 import fastq from 'fastq';
@@ -67,34 +67,38 @@ async function exportNormalizedEntitiesToFile<RawEntity, Entity>(
   );
 }
 
-export async function exportNormalizedTitles() {
+export async function exportNormalizedMovies() {
   const client = await initializeClient({ database: 1 });
 
-  await exportNormalizedEntitiesToFile<RawTitle, Title>(client, './local/titles.txt', (rawTitle) => ({
-    id: rawTitle.tconst,
-    primaryTitle: rawTitle.primaryTitle,
-    averageRating: rawTitle.averageRating,
-    numberOfVotes: rawTitle.numVotes,
-    startYear: Number(rawTitle.startYear),
-    lengthInMinutes: rawTitle.runtimeMinutes ? Number(rawTitle.runtimeMinutes) : null,
-    genres: rawTitle.genres,
+  await exportNormalizedEntitiesToFile<RawMovie, Movie>(client, './local/movies.txt', (rawMovie) => ({
+    id: rawMovie.tconst,
+    title: rawMovie.primaryTitle,
+    averageRating: rawMovie.averageRating,
+    numberOfVotes: rawMovie.numVotes,
+    startYear: Number(rawMovie.startYear),
+    lengthInMinutes: rawMovie.runtimeMinutes ? Number(rawMovie.runtimeMinutes) : null,
+    genres: rawMovie.genres.split(','),
   }));
 
   await client.disconnect();
 }
 
-export async function exportNormalizedMainActors() {
+export async function exportNormalizedMovieMainActors() {
   const client = await initializeClient({ database: 2 });
 
-  await exportNormalizedEntitiesToFile<RawMainActor, MainActor>(client, './local/main-actors.txt', (rawMainActor) => ({
-    id: rawMainActor.tconst,
-    actors: rawMainActor.actors.map((rawActor) => ({
-      id: rawActor.nconst,
-      ordering: rawActor.ordering,
-      category: rawActor.category,
-      characters: rawActor.characters.split(','),
-    })),
-  }));
+  await exportNormalizedEntitiesToFile<RawMovieMainActors, MovieMainActors>(
+    client,
+    './local/movie-main-actors.txt',
+    (rawMovieMainActors) => ({
+      id: rawMovieMainActors.tconst,
+      actors: rawMovieMainActors.actors.map((rawActor) => ({
+        id: rawActor.nconst,
+        ordering: rawActor.ordering,
+        category: rawActor.category,
+        characters: rawActor.characters.split(','),
+      })),
+    }),
+  );
 
   await client.disconnect();
 }
@@ -104,8 +108,8 @@ export async function exportNormalizedActors() {
 
   await exportNormalizedEntitiesToFile<RawActor, Actor>(client, './local/actors.txt', (rawActor) => ({
     id: rawActor.nconst,
-    primaryName: rawActor.primaryName,
-    titles: rawActor.knownForTitles.split(','),
+    name: rawActor.primaryName,
+    movies: rawActor.knownForTitles.split(','),
   }));
 
   await client.disconnect();
