@@ -57,7 +57,9 @@ Agora, será possível executar o transformer usando os seguintes comandos:
    docker compose up cinelsd-redis
    ```
 
-3. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
+3. Crie a pasta `./transformer/local`, para onde os dados normalizados serão exportados.
+
+4. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
 
    ```bash
    pnpm run export
