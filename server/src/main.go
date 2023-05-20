@@ -67,7 +67,7 @@ func sendStringifiedEntity(stringifiedEntity string, context *gin.Context) {
 func main() {
 	loadEnv()
 
-	server := gin.Default()
+	server := gin.New()
 	mainContext := context.Background()
 	movieClient, movieMainActorClient, actorClient := createRedisClients()
 
