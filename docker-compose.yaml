@@ -16,6 +16,32 @@ services:
       timeout: 5s
       retries: 15
 
+  cinelsd-server:
+    image: cinelsd-server:latest
+    build:
+      context: ./server
+    container_name: cinelsd-server
+    environment:
+      PORT: 8001
+      REDIS_HOST: cinelsd-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD:
+      REDIS_MOVIE_DATABASE: 1
+      REDIS_MOVIE_MAIN_ACTORS_DATABASE: 2
+      REDIS_ACTOR_DATABASE: 3
+    ports:
+      - 8001:8001
+    networks:
+      - cinelsd
+    depends_on:
+      cinelsd-redis:
+        condition: service_healthy
+    healthcheck:
+      test: lsof -i:$$PORT
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
 networks:
   cinelsd:
     driver: bridge
