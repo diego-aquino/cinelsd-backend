@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -90,5 +91,6 @@ func main() {
 	})
 
 	port := os.Getenv("PORT")
+	fmt.Println("Starting server on port " + port + "...")
 	server.Run(":" + port)
 }
