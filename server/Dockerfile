@@ -1,4 +1,4 @@
-FROM golang:1.20.4-alpine3.17 AS build
+FROM golang:1.20.4-alpine3.18 AS build
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY ./src ./src
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./src
 
-FROM alpine:3.17 AS release
+FROM alpine:3.18 AS release
 
 WORKDIR /app
 
