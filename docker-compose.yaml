@@ -38,9 +38,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: lsof -i:$$PORT
-      interval: 5s
-      timeout: 5s
-      retries: 15
+      interval: 2s
+      timeout: 2s
+      retries: 10
 
 networks:
   cinelsd:
