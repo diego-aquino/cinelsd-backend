@@ -1,5 +1,17 @@
 # CineLSD Backend
 
+- [CineLSD Backend](#cinelsd-backend)
+  - [Projetos](#projetos)
+  - [Dependências](#dependências)
+  - [Como executar](#como-executar)
+    - [Transformer](#transformer)
+      - [Normalizar dados (export)](#normalizar-dados-export)
+      - [Importar dados normalizados](#importar-dados-normalizados)
+      - [Verificar referências a filmes](#verificar-referências-a-filmes)
+    - [Servidor](#servidor)
+  - [Deploy](#deploy)
+    - [Servidor](#servidor-1)
+
 ## Projetos
 
 - [Server](./server): o servidor do CineLSD, escrito em Go.
@@ -143,6 +155,32 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
    go run ./src
    ```
 
-   Após a execução desse comando, o servidor deve estar rodando em `localhost:3000`.
+   Após a execução desse comando, o servidor deve estar rodando em `localhost:8001`.
 
 Para saber mais sobre os endpoints disponíveis, o arquivo [api-insomnia.json](./server/docs/api-insomnia.json) contém exemplos de todas as requisições e pode ser importado no [Insomnia](https://insomnia.rest).
+
+## Deploy
+
+### Servidor
+
+O deploy do servidor é feito usando Docker e Docker Compose.
+
+1. Faça a build da imagem do servidor:
+
+   ```bash
+   docker compose build cinelsd-server
+   ```
+
+2. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
+
+3. Inicie o servidor:
+
+   ```bash
+    REDIS_RESTART_POLICY=always \
+      SERVER_RESTART_POLICY=always \
+      docker compose up cinelsd-server -d --wait
+   ```
+
+   Esse comando também irá inicializar o serviço de Redis automaticamente.
+
+Após isso, o servidor deve estar pronto para uso e rodando na porta `8001` da máquina utilizada.
