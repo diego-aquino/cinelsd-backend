@@ -54,7 +54,7 @@ Nota: se você não precisa fazer a geração local dos dados normalizados, é p
 
 Agora, será possível executar o transformer usando os seguintes comandos:
 
-#### Normalizar dados (export)
+#### Normalizar dados
 
 1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados brutos.
 
@@ -74,7 +74,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 4. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
 
    ```bash
-   pnpm run export
+   pnpm run normalize
    ```
 
    Após a execução desse comando, os dados normalizados terão sido exportados para `local/actors.txt`, `local/movies.txt` e `local/movie-main-actors.txt`, com uma entidade por linha.
@@ -120,10 +120,33 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 3. Após o serviço do Redis ter inicializado, execute o comando de verificação em outro terminal, de dentro da pasta `transformer`:
 
    ```bash
-   pnpm run check-references
+   pnpm run references:check
    ```
 
    Após a execução desse comando, referências de atores a filmes não existentes terão sido removidas, assim como atores que ficaram sem filmes associados após a remoção das referências inválidas.
+
+#### Exportar IDs dos atores
+
+1. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados normalizados.
+
+   ```yaml
+   volumes:
+     - ./transformer/data/normalized:/data
+   ```
+
+2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
+
+   ```bash
+   docker compose up cinelsd-redis
+   ```
+
+3. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
+
+   ```bash
+   pnpm run actors:export-ids
+   ```
+
+   Após a execução desse comando, todos os IDs dos atores atualmente cadastrados serão exportados para um arquivo `actors.txt` na pasta em que o comando foi executado.
 
 ### Servidor
 

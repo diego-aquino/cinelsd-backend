@@ -1,9 +1,9 @@
-import { initializeClient } from '../utils/redis';
+import { initializeClient } from '../../utils/redis';
 
-import { withTrackedTime } from '../utils/time';
-import { roundByDecimals } from '../utils/numbers';
+import { withTrackedTime } from '../../utils/time';
+import { roundByDecimals } from '../../utils/numbers';
 import { createWriteStream } from 'node:fs';
-import { closeWriteStream } from '../utils/streams';
+import { closeWriteStream } from '../../utils/streams';
 
 async function main() {
   const actorClient = await initializeClient({ database: 3 });
@@ -12,12 +12,10 @@ async function main() {
 
   const elapsedTimeInSeconds = await withTrackedTime(async () => {
     const writeStream = createWriteStream('./actors.txt');
-
     for await (const actorId of actorClient.scanIterator({ MATCH: '*' })) {
       writeStream.write(`"${actorId}"\n`);
       numberOfExportedActors++;
     }
-
     await closeWriteStream(writeStream);
   });
 

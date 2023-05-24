@@ -1,10 +1,10 @@
-import { initializeClient } from '../utils/redis';
+import { initializeClient } from '../../utils/redis';
 import fastq from 'fastq';
 import os from 'os';
 
-import { Actor, RedisClient } from '../types';
-import { withTrackedTime } from '../utils/time';
-import { roundByDecimals } from '../utils/numbers';
+import { Actor, RedisClient } from '../../types';
+import { withTrackedTime } from '../../utils/time';
+import { roundByDecimals } from '../../utils/numbers';
 
 interface CineLSDClients {
   movies: RedisClient;

@@ -7,10 +7,10 @@
   "license": "MIT",
   "scripts": {
     "server": "tsx src/server.ts",
-    "export": "tsx src/export/index.ts",
+    "normalize": "tsx src/normalize/index.ts",
     "import": "tsx src/import/index.ts",
-    "export:actor-ids": "tsx src/export-actor-ids/index.ts",
-    "check-references": "tsx src/check-references/index.ts",
+    "references:check": "tsx src/references/check/index.ts",
+    "actors:export-ids": "tsx src/actors/export-ids/index.ts",
     "types:check": "tsc --noEmit"
   },
   "packageManager": "pnpm@8.5.1",
