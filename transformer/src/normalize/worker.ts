@@ -1,11 +1,12 @@
-import { RawActor, Actor, RawMovieMainActors, MovieMainActors, RawMovie, Movie, RedisClient } from '../types';
-import { initializeClient } from '../utils/redis';
-import { WriteStream, createWriteStream } from 'node:fs';
-import fastq from 'fastq';
 import os from 'os';
-import { closeWriteStream, writeToStream } from '../utils/streams';
-import { roundByDecimals } from '../utils/numbers';
+import fastq from 'fastq';
+import { WriteStream, createWriteStream } from 'node:fs';
+
 import { withTrackedTime } from '../utils/time';
+import { initializeClient } from '../utils/redis';
+import { roundByDecimals } from '../utils/numbers';
+import { closeWriteStream, writeToStream } from '../utils/streams';
+import { RawActor, Actor, RawMovieMainActors, MovieMainActors, RawMovie, Movie, RedisClient } from '../types';
 
 function parseStringifiedRawEntity<ParsedValue>(stringifiedRawEntity: string) {
   return eval(`(${stringifiedRawEntity})`) as ParsedValue;

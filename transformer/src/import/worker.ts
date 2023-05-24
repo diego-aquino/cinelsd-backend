@@ -1,13 +1,13 @@
-import { initializeClient } from '../utils/redis';
+import os from 'os';
+import fastq from 'fastq';
 import { createReadStream } from 'node:fs';
 import readline from 'node:readline/promises';
-import fastq from 'fastq';
-import os from 'os';
 
-import { Actor, MovieMainActors, RedisClient, Movie } from '../types';
+import { initializeClient } from '../utils/redis';
 import { closeReadStream } from '../utils/streams';
 import { withTrackedTime } from '../utils/time';
 import { roundByDecimals } from '../utils/numbers';
+import { Actor, MovieMainActors, RedisClient, Movie } from '../types';
 
 interface ImportNormalizedEntityTask<Entity> {
   client: RedisClient;

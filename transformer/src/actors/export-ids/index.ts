@@ -1,8 +1,8 @@
-import { initializeClient } from '../../utils/redis';
+import { createWriteStream } from 'node:fs';
 
+import { initializeClient } from '../../utils/redis';
 import { withTrackedTime } from '../../utils/time';
 import { roundByDecimals } from '../../utils/numbers';
-import { createWriteStream } from 'node:fs';
 import { closeWriteStream } from '../../utils/streams';
 
 async function main() {
