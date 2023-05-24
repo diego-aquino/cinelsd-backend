@@ -9,6 +9,7 @@
     "server": "tsx src/server.ts",
     "export": "tsx src/export/index.ts",
     "import": "tsx src/import/index.ts",
+    "export:actor-ids": "tsx src/export-actor-ids/index.ts",
     "check-references": "tsx src/check-references/index.ts",
     "types:check": "tsc --noEmit"
   },
