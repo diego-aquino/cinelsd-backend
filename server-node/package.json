@@ -1,0 +1,21 @@
+{
+  "name": "server-node",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [],
+  "author": "Diego Aquino <diegocruzdeaquino@gmail.com>",
+  "main": "index.js",
+  "packageManager": "pnpm@8.5.1",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "fastify": "^4.17.0",
+    "tsx": "^3.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "typescript": "^5.1.3"
+  }
+}
