@@ -1,6 +1,6 @@
 ARG PNPM_VERSION=8.5.1
 
-FROM node:16.17.0-alpine3.16 AS release
+FROM node:18.16.0-alpine3.17 AS release
 
 ARG PNPM_VERSION
 ENV PNPM_HOME=/root/.local/share/pnpm
@@ -9,12 +9,19 @@ RUN npm install -g pnpm@$PNPM_VERSION
 
 WORKDIR /app
 
-COPY ./package.json ./pnpm-lock.yaml ./
-RUN pnpm install
+COPY ./pnpm-lock.yaml ./
+RUN pnpm fetch
+
+COPY ./package.json ./
+RUN pnpm install --offline
 
 COPY ./src ./src
-RUN pnpm install
+COPY tsup.config.ts ./
+RUN pnpm build
 
+RUN pnpm prune --prod
+
+ENV NODE_ENV=production
 EXPOSE $PORT
 
 CMD ["pnpm", "start"]

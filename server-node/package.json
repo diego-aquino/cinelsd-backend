@@ -8,14 +8,20 @@
   "packageManager": "pnpm@8.5.1",
   "license": "MIT",
   "scripts": {
-    "start": "tsx src/index.ts"
+    "dev": "dotenv -c development -- tsx src/index.ts",
+    "build": "tsup",
+    "start": "dotenv -c production -- node dist/index.js"
   },
   "dependencies": {
+    "dotenv-cli": "^7.2.1",
     "fastify": "^4.17.0",
-    "tsx": "^3.12.7"
+    "redis": "^4.6.7",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
+    "tsup": "^6.7.0",
+    "tsx": "^3.12.7",
     "typescript": "^5.1.3"
   }
 }
