@@ -53,12 +53,21 @@ services:
       context: ./server-node
     environment:
       PORT: 8001
+      REDIS_HOST: cinelsd-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD:
+      REDIS_MOVIE_DATABASE: 1
+      REDIS_MOVIE_MAIN_ACTORS_DATABASE: 2
+      REDIS_ACTOR_DATABASE: 3
     networks:
       - cinelsd
     deploy:
-      replicas: 2
+      replicas: ${SERVER_REPLICAS:-1}
       restart_policy:
         condition: ${SERVER_RESTART_POLICY:-no}
+    depends_on:
+      cinelsd-redis:
+        condition: service_healthy
     healthcheck:
       test: lsof -i:$$PORT
       interval: 2s
@@ -69,14 +78,19 @@ services:
     image: nginx:1.25.0-alpine3.17
     container_name: cinelsd-server-node-nginx
     ports:
-      - 8000:80
+      - 8000:8000
     networks:
       - cinelsd
     volumes:
-      - ./server-node/nginx.conf:/etc/nginx/nginx.conf
+      - ./server-node/config/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       cinelsd-server-node:
         condition: service_healthy
+    healthcheck:
+      test: lsof -i:8000
+      interval: 2s
+      timeout: 2s
+      retries: 10
 
 networks:
   cinelsd:
