@@ -6,6 +6,7 @@ ARG PNPM_VERSION
 ENV PNPM_HOME=/root/.local/share/pnpm
 ENV PATH=$PATH:$PNPM_HOME
 RUN npm install -g pnpm@$PNPM_VERSION
+RUN pnpm add pm2 --global
 
 WORKDIR /app
 
@@ -24,4 +25,4 @@ RUN pnpm prune --prod
 ENV NODE_ENV=production
 EXPOSE $PORT
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "start:container"]
