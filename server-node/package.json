@@ -11,7 +11,7 @@
     "dev": "dotenv -c development -- tsx src/index.ts",
     "build": "tsup",
     "start": "dotenv -c production -- node dist/index.js",
-    "start:container": "pm2-runtime dist/index.js --name=server --exec_mode=cluster --instances=${SERVER_INSTANCES:-1}"
+    "start:cluster": "pm2-runtime dist/index.js --name=server --exec_mode=cluster --instances=${SERVER_INSTANCES:-1}"
   },
   "dependencies": {
     "dotenv-cli": "^7.2.1",

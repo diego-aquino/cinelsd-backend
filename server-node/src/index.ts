@@ -2,23 +2,21 @@ import fastify from 'fastify';
 import { RedisClientOptions, createClient } from 'redis';
 import { z } from 'zod';
 
-function validateEnvironment() {
-  return z
-    .object({
-      NODE_ENV: z.enum(['development', 'production']).optional().default('development'),
+const environmentSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production']).optional().default('development'),
 
-      PORT: z.coerce.number(),
+  PORT: z.coerce.number(),
 
-      REDIS_HOST: z.string(),
-      REDIS_PORT: z.coerce.number(),
-      REDIS_PASSWORD: z.string().optional(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number(),
+  REDIS_PASSWORD: z.string().optional(),
 
-      REDIS_MOVIE_DATABASE: z.coerce.number(),
-      REDIS_MOVIE_MAIN_ACTORS_DATABASE: z.coerce.number(),
-      REDIS_ACTOR_DATABASE: z.coerce.number(),
-    })
-    .parse(process.env);
-}
+  REDIS_MOVIE_DATABASE: z.coerce.number(),
+  REDIS_MOVIE_MAIN_ACTORS_DATABASE: z.coerce.number(),
+  REDIS_ACTOR_DATABASE: z.coerce.number(),
+});
+
+const environment = environmentSchema.parse(process.env);
 
 export async function initializeRedisClient(options?: RedisClientOptions) {
   const client = createClient(options);
@@ -49,14 +47,14 @@ async function initializeRedisClients(options: {
   ]);
 
   const redis = { movies, mainActors, actors };
-
   return redis;
 }
 
 async function startServer() {
-  const environment = validateEnvironment();
-
-  const app = fastify({ logger: environment.NODE_ENV === 'development' });
+  const server = fastify({
+    logger: true,
+    disableRequestLogging: environment.NODE_ENV !== 'development',
+  });
 
   const redis = await initializeRedisClients({
     host: environment.REDIS_HOST,
@@ -67,37 +65,40 @@ async function startServer() {
     actorDatabase: environment.REDIS_ACTOR_DATABASE,
   });
 
-  app.get('/movies/:movieId', async (request, reply) => {
-    const { movieId } = z.object({ movieId: z.string() }).parse(request.params);
+  const getMovieByIdSchema = z.object({ movieId: z.string() });
 
-    const movie = await redis.movies.get(movieId);
+  server.get('/movies/:movieId', async (request, reply) => {
+    const { movieId } = getMovieByIdSchema.parse(request.params);
 
-    reply.header('Content-Type', 'application/json');
-    reply.send(movie);
-  });
-
-  app.get('/movie-main-actors/:movieId', async (request, reply) => {
-    const { movieId } = z.object({ movieId: z.string() }).parse(request.params);
-
-    const movieMainActors = await redis.mainActors.get(movieId);
+    const stringifiedMovie = await redis.movies.get(movieId);
 
     reply.header('Content-Type', 'application/json');
-    reply.send(movieMainActors);
+    reply.send(stringifiedMovie);
   });
 
-  app.get('/actors/:actorId', async (request, reply) => {
-    const { actorId } = z.object({ actorId: z.string() }).parse(request.params);
+  const getMovieMainActorsSchema = z.object({ movieId: z.string() });
 
-    const actor = await redis.actors.get(actorId);
+  server.get('/movie-main-actors/:movieId', async (request, reply) => {
+    const { movieId } = getMovieMainActorsSchema.parse(request.params);
+
+    const stringifiedMovieMainActors = await redis.mainActors.get(movieId);
 
     reply.header('Content-Type', 'application/json');
-    reply.send(actor);
+    reply.send(stringifiedMovieMainActors);
   });
 
-  await app.listen({
-    host: '0.0.0.0',
-    port: environment.PORT,
+  const getActorByIdSchema = z.object({ actorId: z.string() });
+
+  server.get('/actors/:actorId', async (request, reply) => {
+    const { actorId } = getActorByIdSchema.parse(request.params);
+
+    const stringifiedActor = await redis.actors.get(actorId);
+
+    reply.header('Content-Type', 'application/json');
+    reply.send(stringifiedActor);
   });
+
+  await server.listen({ host: '::', port: environment.PORT });
 }
 
 startServer();

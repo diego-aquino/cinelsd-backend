@@ -25,4 +25,4 @@ RUN pnpm prune --prod
 ENV NODE_ENV=production
 EXPOSE $PORT
 
-CMD ["pnpm", "start:container"]
+CMD ["pnpm", "start:cluster"]
