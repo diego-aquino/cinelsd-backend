@@ -15,7 +15,7 @@
 
 ## Projetos
 
-- [Server](./server): o servidor do CineLSD, escrito em Go.
+- [Server](./server): o servidor do CineLSD, escrito em Go e baseado em [caetanobca/IMDB-API](https://github.com/caetanobca/IMDB-API).
 - [Transformer](./transformer): o transformador usado para normalizar os dados da API do IMDb, escrito em TypeScript.
 
 ## Dependências
