@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "incremental": false,
+    "target": "es2020",
+    "lib": [],
+
+    "module": "commonjs",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "sourceMap": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
