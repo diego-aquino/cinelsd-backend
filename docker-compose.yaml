@@ -80,7 +80,7 @@ services:
     build:
       context: ./server-node
     environment:
-      PORT: 8001
+      PORT: 8002
       REDIS_HOST: cinelsd-redis
       REDIS_PORT: 6379
       REDIS_PASSWORD:
