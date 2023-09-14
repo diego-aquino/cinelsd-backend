@@ -9,26 +9,43 @@
       - [Importar dados normalizados](#importar-dados-normalizados)
       - [Verificar referências a filmes](#verificar-referências-a-filmes)
       - [Exportar IDs dos atores](#exportar-ids-dos-atores)
-    - [Servidor](#servidor)
+    - [Servidores](#servidores)
+      - [Servidor Go](#servidor-go)
+      - [Servidor Node.js](#servidor-nodejs)
   - [Deploy](#deploy)
-    - [Servidor](#servidor-1)
+    - [Servidores](#servidores-1)
+      - [Servidor Go](#servidor-go-1)
+      - [Servidor Node.js](#servidor-nodejs-1)
 
 ## Projetos
 
-- [Server](./server): o servidor do CineLSD, escrito em Go e baseado em [caetanobca/IMDB-API](https://github.com/caetanobca/IMDB-API).
+- [Server Go](./server-go): o servidor original do CineLSD, escrito em Go e baseado em [caetanobca/IMDB-API](https://github.com/caetanobca/IMDB-API).
+- [Server Node.js](./server-node): versão alternativa do servidor do CineLSD, escrito em Node.js.
 - [Transformer](./transformer): o transformador usado para normalizar os dados da API do IMDb, escrito em TypeScript.
 
 ## Dependências
 
 - Gerais
-  - [Docker](https://docs.docker.com/engine/install)
-  - [Redis](https://redis.com) (não é necessária a instalação local, pois é usado através do Docker)
-- Server
-  - [Go](https://go.dev)
+  - [Docker][docker-install]
+  - [Redis][redis] (não é necessária a instalação local, pois é usado através do Docker)
+- Servidor
+  - Go
+    - [Go][go]
+  - Node.js
+    - [Node.js][node-js]
+    - [TypeScript][typescript]
+    - [pnpm][pnpm]
 - Transformer
-  - [Node.js](https://nodejs.org)
-  - [TypeScript](https://www.typescriptlang.org)
-  - [pnpm](https://pnpm.io/)
+  - [Node.js][node-js]
+  - [TypeScript][typescript]
+  - [pnpm][pnpm]
+
+[docker-install]: https://docs.docker.com/engine/install
+[redis]: https://redis.com
+[go]: https://go.dev
+[typescript]: https://www.typescriptlang.org
+[node-js]: https://nodejs.org
+[pnpm]: https://pnpm.io
 
 ## Como executar
 
@@ -67,7 +84,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis
+   docker compose up cinelsd-redis -d --wait
    ```
 
 3. Crie a pasta `./transformer/local`, para onde os dados normalizados serão exportados.
@@ -92,7 +109,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis
+   docker compose up cinelsd-redis -d --wait
    ```
 
 3. Após o serviço do Redis ter inicializado, execute o comando de importação em outro terminal, de dentro da pasta `transformer`:
@@ -115,7 +132,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis
+   docker compose up cinelsd-redis -d --wait
    ```
 
 3. Após o serviço do Redis ter inicializado, execute o comando de verificação em outro terminal, de dentro da pasta `transformer`:
@@ -138,7 +155,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis
+   docker compose up cinelsd-redis -d --wait
    ```
 
 3. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
@@ -149,18 +166,24 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 
    Após a execução desse comando, todos os IDs dos atores atualmente cadastrados serão exportados para um arquivo `actors.txt` na pasta em que o comando foi executado.
 
-### Servidor
+### Servidores
 
-Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rdb`, é possível fazer a configuração do servidor.
+Os servidores em Go e Node.js são implementações diferentes com o mesmo funcionamento. Portanto, é necessário escolher apenas um deles para executar.
+
+Para saber mais sobre os endpoints disponíveis, o arquivo [api-insomnia.json](./docs/api-insomnia.json) contém exemplos de todas as requisições e pode ser importado no [Insomnia](https://insomnia.rest).
+
+#### Servidor Go
+
+Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rdb`, é possível fazer a configuração do servidor Go.
 
 1. Entre no projeto do servidor e instale as dependências.
 
    ```bash
-   cd server
+   cd server-go
    go mod download
    ```
 
-2. Mude o caminho do volume do serviço `cinelsd-redis`, em `docker-compose.yaml` para usar os dados normalizados.
+2. Mude o caminho do volume do serviço `cinelsd-redis` para usar os dados normalizados em `docker-compose.yaml`.
 
    ```yaml
    volumes:
@@ -170,10 +193,10 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 3. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis
+   docker compose up cinelsd-redis -d --wait
    ```
 
-4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server`:
+4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server-go`:
 
    ```bash
    go run ./src
@@ -181,18 +204,50 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 
    Após a execução desse comando, o servidor deve estar rodando em `localhost:8001`.
 
-Para saber mais sobre os endpoints disponíveis, o arquivo [api-insomnia.json](./server/docs/api-insomnia.json) contém exemplos de todas as requisições e pode ser importado no [Insomnia](https://insomnia.rest).
+#### Servidor Node.js
+
+Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rdb`, é possível fazer a configuração do servidor Node.js.
+
+1. Entre no projeto do servidor e instale as dependências.
+
+   ```bash
+   cd server-node
+   pnpm install
+   ```
+
+2. Mude o caminho do volume do serviço `cinelsd-redis` para usar os dados normalizados em `docker-compose.yaml`.
+
+   ```yaml
+   volumes:
+     - ./transformer/data/normalized:/data
+   ```
+
+3. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
+
+   ```bash
+   docker compose up cinelsd-redis -d --wait
+   ```
+
+4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server-node`:
+
+   ```bash
+   pnpm run dev
+   ```
+
+   Após a execução desse comando, o servidor deve estar rodando em `localhost:8002`.
 
 ## Deploy
 
-### Servidor
+### Servidores
 
-O deploy do servidor é feito usando Docker e Docker Compose.
+O deploy dos servidores é feito usando Docker e Docker Compose.
+
+#### Servidor Go
 
 1. Faça a build da imagem do servidor:
 
    ```bash
-   docker compose build cinelsd-server
+   docker compose build cinelsd-server-go
    ```
 
 2. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
@@ -203,9 +258,32 @@ O deploy do servidor é feito usando Docker e Docker Compose.
     REDIS_RESTART_POLICY=always
       SERVER_RESTART_POLICY=always
       SERVER_GOMAXPROCS=<numero-maximo-de-processos>
-      docker compose up cinelsd-server -d --wait
+      docker compose up cinelsd-server-go -d --wait
    ```
 
    Esse comando também irá inicializar o serviço de Redis automaticamente.
 
-Após isso, o servidor deve estar pronto para uso e rodando na porta `8001` da máquina utilizada.
+Após isso, o servidor deve estar pronto para uso e rodando na porta `8001`.
+
+#### Servidor Node.js
+
+1. Faça a build da imagem do servidor:
+
+   ```bash
+   docker compose build cinelsd-server-node
+   ```
+
+2. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
+
+3. Inicie o servidor:
+
+   ```bash
+    REDIS_RESTART_POLICY=always
+      SERVER_RESTART_POLICY=always
+      SERVER_INSTANCES=<numero-de-instâncias>
+      docker compose up cinelsd-server-node -d --wait
+   ```
+
+   Esse comando também irá inicializar o serviço de Redis automaticamente.
+
+Após isso, o servidor deve estar pronto para uso e rodando na porta `8002`.
