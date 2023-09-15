@@ -106,7 +106,7 @@ services:
     image: nginx:1.25.0-alpine3.17
     container_name: cinelsd-server-node-nginx
     ports:
-      - 8000:8000
+      - 8002:8002
     networks:
       - cinelsd
     volumes:
@@ -115,11 +115,29 @@ services:
       cinelsd-server-node:
         condition: service_healthy
     healthcheck:
-      test: lsof -i:8000
+      test: lsof -i:8002
+      interval: 2s
+      timeout: 2s
+      retries: 10
+
+  cinelsd-prometheus-stats-exporter:
+    image: wywywywy/docker_stats_exporter:20220516
+    container_name: cinelsd-prometheus-stats-exporter
+    restart: ${SERVER_RESTART_POLICY:-no}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9487:9487
+    networks:
+      - cinelsd-monitoring
+    healthcheck:
+      test: lsof -i:9487
       interval: 2s
       timeout: 2s
       retries: 10
 
 networks:
   cinelsd:
+    driver: bridge
+  cinelsd-monitoring:
     driver: bridge
