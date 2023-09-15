@@ -11,7 +11,7 @@
     "dev": "dotenv -c development -- tsx --watch src/index.ts",
     "build": "tsup",
     "start": "dotenv -c production -- node build/index.js",
-    "compose": "docker compose -f ../docker-compose.yaml",
+    "compose": "../docker/compose.sh dev",
     "deps:up": "pnpm compose up cinelsd-redis -d --wait",
     "types:check": "tsc"
   },

@@ -12,4 +12,4 @@ scrape_configs:
     metrics_path: /
     static_configs:
       - targets:
-          - cinelsd-prometheus-stats-exporter:9001
+          - cinelsd-prometheus-stats-exporter:3000

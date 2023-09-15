@@ -4,11 +4,11 @@ services:
   cinelsd-redis:
     image: redis:7.2-rc1-alpine3.18
     container_name: cinelsd-redis
-    restart: ${RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:?}
     networks:
       - cinelsd
     volumes:
-      - ./transformer/data/normalized:/data
+      - ../transformer/data/normalized:/data
     ports:
       - 6379:6379
     healthcheck:
@@ -22,7 +22,7 @@ services:
     build:
       context: ./server-go
     container_name: cinelsd-server-go
-    restart: ${RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:?}
     environment:
       PORT: 8001
       REDIS_HOST: cinelsd-redis
@@ -31,9 +31,9 @@ services:
       REDIS_MOVIE_DATABASE: 1
       REDIS_MOVIE_MAIN_ACTORS_DATABASE: 2
       REDIS_ACTOR_DATABASE: 3
-      GOGC: ${SERVER_GOGC:-100}
-      GOMEMLIMIT: ${SERVER_GOMEMLIMIT:-500MiB}
-      GOMAXPROCS: ${SERVER_GOMAXPROCS:-1}
+      GOGC: $SERVER_GO_GOGC
+      GOMEMLIMIT: $SERVER_GO_GOMEMLIMIT
+      GOMAXPROCS: $SERVER_GO_GOMAXPROCS
     ports:
       - 8001:8001
     networks:
@@ -52,7 +52,7 @@ services:
     build:
       context: ./server-node
     container_name: cinelsd-server-node
-    restart: ${RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:?}
     environment:
       PORT: 8002
       REDIS_HOST: cinelsd-redis
@@ -61,7 +61,7 @@ services:
       REDIS_MOVIE_DATABASE: 1
       REDIS_MOVIE_MAIN_ACTORS_DATABASE: 2
       REDIS_ACTOR_DATABASE: 3
-      SERVER_INSTANCES: ${SERVER_INSTANCES:-1}
+      SERVER_INSTANCES: $SERVER_NODE_INSTANCES
     ports:
       - 8002:8002
     networks:
@@ -92,7 +92,7 @@ services:
     deploy:
       replicas: 1
       restart_policy:
-        condition: ${RESTART_POLICY:-no}
+        condition: ${RESTART_POLICY:?}
     depends_on:
       cinelsd-redis:
         condition: service_healthy
@@ -110,7 +110,7 @@ services:
     networks:
       - cinelsd
     volumes:
-      - ./server-node/config/nginx.conf:/etc/nginx/nginx.conf
+      - ../server-node/config/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       cinelsd-server-node:
         condition: service_healthy
@@ -123,11 +123,11 @@ services:
   cinelsd-prometheus-stats-exporter:
     image: wywywywy/docker_stats_exporter:20220516
     container_name: cinelsd-prometheus-stats-exporter
-    restart: ${RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:?}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      DOCKERSTATS_PORT: 9001
+      DOCKERSTATS_PORT: 3000
       DOCKERSTATS_INTERVAL: 15
     networks:
       - cinelsd-monitoring
@@ -141,10 +141,10 @@ services:
     image: prom/prometheus:v2.37.9
     container_name: cinelsd-prometheus
     user: root
-    restart: ${RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:?}
     volumes:
-      - ./prometheus/config:/etc/prometheus
-      - ./prometheus/data:/prometheus
+      - ../prometheus/config:/etc/prometheus
+      - ../prometheus/data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yaml
       - --storage.tsdb.path=/prometheus
@@ -165,18 +165,18 @@ services:
     image: grafana/grafana:10.0.5
     container_name: cinelsd-grafana
     user: root
-    restart: ${RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:?}
     volumes:
-      - ./grafana/data:/var/lib/grafana
+      - ../grafana/data:/var/lib/grafana
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin
     networks:
       - cinelsd-monitoring
+    ports:
+      - 9001:3000
     depends_on:
       cinelsd-prometheus:
         condition: service_healthy
-    ports:
-      - 9002:3000
 
 networks:
   cinelsd:
