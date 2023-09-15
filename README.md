@@ -16,6 +16,7 @@
     - [Servidores](#servidores-1)
       - [Servidor Go](#servidor-go-1)
       - [Servidor Node.js](#servidor-nodejs-1)
+    - [Monitoramento](#monitoramento)
 
 ## Projetos
 
@@ -84,7 +85,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis -d --wait
+   docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
 3. Crie a pasta `./transformer/local`, para onde os dados normalizados serão exportados.
@@ -109,7 +110,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis -d --wait
+   docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
 3. Após o serviço do Redis ter inicializado, execute o comando de importação em outro terminal, de dentro da pasta `transformer`:
@@ -132,7 +133,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis -d --wait
+   docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
 3. Após o serviço do Redis ter inicializado, execute o comando de verificação em outro terminal, de dentro da pasta `transformer`:
@@ -155,7 +156,7 @@ Agora, será possível executar o transformer usando os seguintes comandos:
 2. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis -d --wait
+   docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
 3. Após o serviço do Redis ter inicializado, execute o comando de exportação em outro terminal, de dentro da pasta `transformer`:
@@ -193,7 +194,7 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 3. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis -d --wait
+   docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
 4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server-go`:
@@ -225,7 +226,7 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 3. Da raiz deste repositório, inicie o serviço do Redis, se já não estiver rodando.
 
    ```bash
-   docker compose up cinelsd-redis -d --wait
+   docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
 4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server-node`:
@@ -242,46 +243,66 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 
 O deploy dos servidores é feito usando Docker e Docker Compose.
 
+1. Declare um arquivo `.env.production.local` dentro de [docker](./docker), caso não exista. Este arquivo deve conter as variáveis listadas em [.env.example](./docker/.env.example).
+
 #### Servidor Go
 
-1. Faça a build da imagem do servidor:
+2. Faça a build da imagem do servidor:
 
    ```bash
-   docker compose build cinelsd-server-go
+   docker/compose.sh prod build cinelsd-server-go
    ```
 
-2. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
+3. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
 
-3. Inicie o servidor:
+4. Inicie o servidor:
 
    ```bash
-    RESTART_POLICY=always
-      SERVER_GOMAXPROCS=<numero-maximo-de-processos>
-      docker compose up cinelsd-server-go -d --wait
+   docker/compose.sh prod up cinelsd-server-go -d --wait
    ```
 
    Esse comando também irá inicializar o serviço de Redis automaticamente.
 
-Após isso, o servidor deve estar pronto para uso e rodando na porta `8001`.
+Após isso, o servidor Go deve estar pronto para uso e rodando na porta `8001`.
 
 #### Servidor Node.js
 
-1. Faça a build da imagem do servidor:
+2. Faça a build da imagem do servidor:
 
    ```bash
-   docker compose build cinelsd-server-node
+   docker/compose.sh prod build cinelsd-server-node
    ```
 
-2. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
+3. Siga o [passo 1 da configuração do transformer](#transformer) para baixar os dados normalizados.
 
-3. Inicie o servidor:
+4. Inicie o servidor:
 
    ```bash
-    RESTART_POLICY=always
-      SERVER_INSTANCES=<numero-de-instâncias>
-      docker compose up cinelsd-server-node -d --wait
+   docker/compose.sh prod up cinelsd-server-node -d --wait
    ```
 
    Esse comando também irá inicializar o serviço de Redis automaticamente.
 
-Após isso, o servidor deve estar pronto para uso e rodando na porta `8002`.
+Após isso, o servidor Node.js deve estar pronto para uso e rodando na porta `8002`.
+
+### Monitoramento
+
+Para monitoramento, são usados o [Prometheus](https://prometheus.io) e o [Grafana](https://grafana.com).
+
+1. Inicie o Prometheus e o Grafana:
+
+   ```bash
+   docker/compose.sh prod up cinelsd-prometheus cinelsd-grafana -d --wait
+   ```
+
+2. Após iniciar, verifique se foi possível conectar o stats exporter ao Docker:
+
+   ```bash
+   docker/compose.sh prod logs cinelsd-prometheus-stats-exporter
+   ```
+
+   Se não haver logs de erro, o stats exporter está funcionando corretamente.
+
+   Caso tenha erros de permissão ao montar o `/var/run/docker.sock`, volte ao passo 1 e tente executar o comando com `sudo`.
+
+Após isso, o Prometheus estará disponível na porta `9000` e a interface do Grafana, na porta `9001`.
