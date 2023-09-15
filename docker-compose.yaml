@@ -4,7 +4,7 @@ services:
   cinelsd-redis:
     image: redis:7.2-rc1-alpine3.18
     container_name: cinelsd-redis
-    restart: ${REDIS_RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:-no}
     networks:
       - cinelsd
     volumes:
@@ -22,7 +22,7 @@ services:
     build:
       context: ./server-go
     container_name: cinelsd-server-go
-    restart: ${SERVER_RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:-no}
     environment:
       PORT: 8001
       REDIS_HOST: cinelsd-redis
@@ -52,7 +52,7 @@ services:
     build:
       context: ./server-node
     container_name: cinelsd-server-node
-    restart: ${SERVER_RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:-no}
     environment:
       PORT: 8002
       REDIS_HOST: cinelsd-redis
@@ -92,7 +92,7 @@ services:
     deploy:
       replicas: 1
       restart_policy:
-        condition: ${SERVER_RESTART_POLICY:-no}
+        condition: ${RESTART_POLICY:-no}
     depends_on:
       cinelsd-redis:
         condition: service_healthy
@@ -123,18 +123,60 @@ services:
   cinelsd-prometheus-stats-exporter:
     image: wywywywy/docker_stats_exporter:20220516
     container_name: cinelsd-prometheus-stats-exporter
-    restart: ${SERVER_RESTART_POLICY:-no}
+    restart: ${RESTART_POLICY:-no}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 9487:9487
+    environment:
+      DOCKERSTATS_PORT: 9001
+      DOCKERSTATS_INTERVAL: 15
     networks:
       - cinelsd-monitoring
     healthcheck:
-      test: lsof -i:9487
+      test: lsof -i:$$DOCKERSTATS_PORT
       interval: 2s
       timeout: 2s
       retries: 10
+
+  cinelsd-prometheus:
+    image: prom/prometheus:v2.37.9
+    container_name: cinelsd-prometheus
+    user: root
+    restart: ${RESTART_POLICY:-no}
+    volumes:
+      - ./prometheus/config:/etc/prometheus
+      - ./prometheus/data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+      - --storage.tsdb.path=/prometheus
+    networks:
+      - cinelsd-monitoring
+    ports:
+      - 9000:9090
+    depends_on:
+      cinelsd-prometheus-stats-exporter:
+        condition: service_healthy
+    healthcheck:
+      test: wget http://localhost:9090/-/healthy --quiet -O -
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  cinelsd-grafana:
+    image: grafana/grafana:10.0.5
+    container_name: cinelsd-grafana
+    user: root
+    restart: ${RESTART_POLICY:-no}
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    networks:
+      - cinelsd-monitoring
+    depends_on:
+      cinelsd-prometheus:
+        condition: service_healthy
+    ports:
+      - 9002:3000
 
 networks:
   cinelsd:

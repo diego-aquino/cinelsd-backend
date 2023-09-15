@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090
+
+  - job_name: prometheus_stats_exporter
+    metrics_path: /
+    static_configs:
+      - targets:
+          - cinelsd-prometheus-stats-exporter:9001

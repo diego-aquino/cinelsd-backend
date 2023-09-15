@@ -1,0 +1,12 @@
+# Dependencies
+**/node_modules
+
+# Build
+**/build
+
+# Environment
+**/.env*.local
+
+# Monitoring
+/prometheus/data
+/grafana/data

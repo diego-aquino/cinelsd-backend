@@ -255,8 +255,7 @@ O deploy dos servidores é feito usando Docker e Docker Compose.
 3. Inicie o servidor:
 
    ```bash
-    REDIS_RESTART_POLICY=always
-      SERVER_RESTART_POLICY=always
+    RESTART_POLICY=always
       SERVER_GOMAXPROCS=<numero-maximo-de-processos>
       docker compose up cinelsd-server-go -d --wait
    ```
@@ -278,8 +277,7 @@ Após isso, o servidor deve estar pronto para uso e rodando na porta `8001`.
 3. Inicie o servidor:
 
    ```bash
-    REDIS_RESTART_POLICY=always
-      SERVER_RESTART_POLICY=always
+    RESTART_POLICY=always
       SERVER_INSTANCES=<numero-de-instâncias>
       docker compose up cinelsd-server-node -d --wait
    ```
