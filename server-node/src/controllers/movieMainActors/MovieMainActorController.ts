@@ -10,7 +10,6 @@ const getMovieMainActorsSchema = z.object({
 class MovieMainActorController extends Controller {
   registerRoutes(server: FastifyInstance) {
     server.get('/movie-main-actors/:movieId', this.getByMovieId.bind(this));
-    return this;
   }
 
   async getByMovieId(request: FastifyRequest, reply: FastifyReply) {

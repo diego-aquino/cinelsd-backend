@@ -4,7 +4,7 @@ import { FastifyInstance } from 'fastify';
 abstract class Controller {
   constructor(protected context: ServerContext) {}
 
-  protected abstract registerRoutes(server: FastifyInstance): Controller;
+  abstract registerRoutes(server: FastifyInstance): Promise<void> | void;
 }
 
 export default Controller;

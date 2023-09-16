@@ -1,4 +1,4 @@
-import { environment } from './config/environment';
+import environment from './config/environment';
 import Server from './server';
 
 const server = new Server();

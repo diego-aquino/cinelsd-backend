@@ -10,7 +10,6 @@ const getMovieByIdSchema = z.object({
 class MovieController extends Controller {
   registerRoutes(server: FastifyInstance) {
     server.get('/movies/:movieId', this.getById.bind(this));
-    return this;
   }
 
   async getById(request: FastifyRequest, reply: FastifyReply) {

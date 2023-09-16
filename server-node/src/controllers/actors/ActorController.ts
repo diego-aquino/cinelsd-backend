@@ -10,7 +10,6 @@ const getActorByIdSchema = z.object({
 class ActorController extends Controller {
   registerRoutes(server: FastifyInstance) {
     server.get('/actors/:actorId', this.getById.bind(this));
-    return this;
   }
 
   async getById(request: FastifyRequest, reply: FastifyReply) {

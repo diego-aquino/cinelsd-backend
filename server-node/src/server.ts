@@ -1,10 +1,11 @@
 import fastify, { FastifyInstance } from 'fastify';
 
-import { environment } from '@/config/environment';
+import environment from '@/config/environment';
 import RedisClient from '@/database/redis/RedisClient';
 import ActorController from '@/controllers/actors/ActorController';
 import MovieController from '@/controllers/movies/MovieController';
 import MovieMainActorController from '@/controllers/movieMainActors/MovieMainActorController';
+import Controller from '@/controllers/Controller';
 
 export interface ServerContext {
   redis: RedisClient;
@@ -21,6 +22,7 @@ class Server {
     });
 
     this.context = this.createContext();
+
     this.createControllers();
   }
 
@@ -40,9 +42,15 @@ class Server {
   }
 
   private createControllers() {
-    new MovieController(this.context).registerRoutes(this.server);
-    new MovieMainActorController(this.context).registerRoutes(this.server);
-    new ActorController(this.context).registerRoutes(this.server);
+    const controllers: Controller[] = [
+      new MovieController(this.context),
+      new MovieMainActorController(this.context),
+      new ActorController(this.context),
+    ];
+
+    for (const controller of controllers) {
+      controller.registerRoutes(this.server);
+    }
   }
 
   async start(port: number) {
