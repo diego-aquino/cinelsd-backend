@@ -8,7 +8,7 @@
   "packageManager": "pnpm@8.5.1",
   "license": "MIT",
   "scripts": {
-    "dev": "dotenv -c development -- tsx --watch src/index.ts",
+    "dev": "dotenv -c development -- tsx watch src/index.ts",
     "build": "tsup",
     "start": "dotenv -c production -- node build/index.js",
     "compose": "../docker/compose.sh dev",
