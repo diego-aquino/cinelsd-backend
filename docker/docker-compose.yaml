@@ -1,5 +1,7 @@
 version: '3.9'
 
+name: cinelsd
+
 services:
   cinelsd-redis:
     image: redis:7.2-rc1-alpine3.18
