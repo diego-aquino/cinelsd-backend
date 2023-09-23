@@ -20,7 +20,7 @@ services:
   cinelsd-server-go:
     image: cinelsd-server-go:latest
     build:
-      context: ./server/go
+      context: ../server/go
     container_name: cinelsd-server-go
     restart: ${RESTART_POLICY:?}
     environment:
@@ -50,7 +50,7 @@ services:
   cinelsd-server-node:
     image: cinelsd-server-node:latest
     build:
-      context: ./server/node
+      context: ../server/node
     container_name: cinelsd-server-node
     restart: ${RESTART_POLICY:?}
     environment:
@@ -78,7 +78,7 @@ services:
   cinelsd-server-node-replicas:
     image: cinelsd-server-node:latest
     build:
-      context: ./server/node
+      context: ../server/node
     environment:
       PORT: 8002
       REDIS_HOST: cinelsd-redis
