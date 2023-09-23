@@ -20,8 +20,8 @@
 
 ## Projetos
 
-- [Server Go](./server-go): o servidor original do CineLSD, escrito em Go e baseado em [caetanobca/IMDB-API](https://github.com/caetanobca/IMDB-API).
-- [Server Node.js](./server-node): versão alternativa do servidor do CineLSD, escrito em Node.js.
+- [Server Go](./server/go): o servidor original do CineLSD, escrito em Go e baseado em [caetanobca/IMDB-API](https://github.com/caetanobca/IMDB-API).
+- [Server Node.js](./server/node): versão alternativa do servidor do CineLSD, escrito em Node.js.
 - [Transformer](./transformer): o transformador usado para normalizar os dados da API do IMDb, escrito em TypeScript.
 
 ## Dependências
@@ -180,7 +180,7 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 1. Entre no projeto do servidor e instale as dependências.
 
    ```bash
-   cd server-go
+   cd server/go
    go mod download
    ```
 
@@ -197,7 +197,7 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
    docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
-4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server-go`:
+4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server/go`:
 
    ```bash
    go run ./src
@@ -212,7 +212,7 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
 1. Entre no projeto do servidor e instale as dependências.
 
    ```bash
-   cd server-node
+   cd server/node
    pnpm install
    ```
 
@@ -229,7 +229,7 @@ Tendo os dados normalizados disponíveis em `transformer/data/normalized/dump.rd
    docker/compose.sh dev up cinelsd-redis -d --wait
    ```
 
-4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server-node`:
+4. Após o serviço do Redis ter inicializado, inicie o servidor em outro terminal, de dentro da pasta `server/node`:
 
    ```bash
    pnpm run dev
