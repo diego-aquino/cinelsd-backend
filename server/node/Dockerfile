@@ -1,4 +1,4 @@
-FROM node:18.17.1-alpine3.17 AS base
+FROM node:20.7.0-alpine3.18 AS base
 
 ARG PNPM_VERSION=8.5.1
 ENV PNPM_HOME=/pnpm
