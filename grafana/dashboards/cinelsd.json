@@ -1,4 +1,35 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.5"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,14 +49,14 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -146,7 +177,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "dockerstats_cpu_usage_ratio{name=\"cinelsd-server-node\"}",
@@ -158,7 +189,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "dockerstats_cpu_usage_ratio{name=\"cinelsd-server-go\"}",
@@ -171,7 +202,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "dockerstats_cpu_usage_ratio{name=\"cinelsd-redis\"}",
@@ -188,7 +219,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -312,7 +343,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "dockerstats_memory_usage_bytes{name=\"cinelsd-server-node\"}",
@@ -324,7 +355,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "dockerstats_memory_usage_bytes{name=\"cinelsd-server-go\"}",
@@ -337,7 +368,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "dockerstats_memory_usage_bytes{name=\"cinelsd-redis\"}",
@@ -354,7 +385,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -478,7 +509,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_network_transmitted_bytes{name=\"cinelsd-server-node\"}[1m])",
@@ -490,7 +521,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_network_transmitted_bytes{name=\"cinelsd-server-go\"}[1m])",
@@ -503,7 +534,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_network_transmitted_bytes{name=\"cinelsd-redis\"}[1m])",
@@ -520,7 +551,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -644,7 +675,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_network_received_bytes{name=\"cinelsd-server-node\"}[1m])",
@@ -656,7 +687,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_network_received_bytes{name=\"cinelsd-server-go\"}[1m])",
@@ -669,7 +700,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_network_received_bytes{name=\"cinelsd-redis\"}[1m])",
@@ -686,7 +717,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -810,7 +841,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_blockio_written_bytes{name=\"cinelsd-server-node\"}[1m])",
@@ -822,7 +853,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_blockio_written_bytes{name=\"cinelsd-server-go\"}[1m])",
@@ -835,7 +866,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_blockio_written_bytes{name=\"cinelsd-redis\"}[1m])",
@@ -852,7 +883,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -976,7 +1007,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_blockio_read_bytes{name=\"cinelsd-server-node\"}[1m])",
@@ -988,7 +1019,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_blockio_read_bytes{name=\"cinelsd-server-go\"}[1m])",
@@ -1001,7 +1032,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bb9c4140-1555-464f-8246-9d616d0e618c"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
           "expr": "rate(dockerstats_blockio_read_bytes{name=\"cinelsd-redis\"}[1m])",
@@ -1031,6 +1062,6 @@
   "timezone": "",
   "title": "CineLSD",
   "uid": "d52c5097-58c0-42be-84ab-cc8ecc35a33c",
-  "version": 7,
+  "version": 2,
   "weekStart": ""
 }
