@@ -5,7 +5,7 @@ dependencies:
     specifier: ^7.2.1
     version: 7.2.1
   fastify:
-    specifier: ^5.7.3
+    specifier: ^5.8.5
     version: 5.8.5
   pm2:
     specifier: ^7.0.0
@@ -14,7 +14,7 @@ dependencies:
     specifier: ^4.6.8
     version: 4.6.8
   zod:
-    specifier: ^3.21.4
+    specifier: ^3.22.3
     version: 3.22.3
 
 devDependencies:
@@ -257,7 +257,7 @@ packages:
     dependencies:
       ajv: 8.18.0
       ajv-formats: 3.0.1(ajv@8.18.0)
-      fast-uri: 3.1.0
+      fast-uri: 3.1.2
     dev: false
 
   /@fastify/error@4.2.0:
@@ -456,7 +456,7 @@ packages:
     resolution: {integrity: sha512-PlXPeEWMXMZ7sPYOHqmDyCJzcfNrUr3fGNKtezX14ykXOEIvyK81d+qydx89KY5O71FKMPaQ2vBfBFI5NHR63A==}
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.1.0
+      fast-uri: 3.1.2
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
     dev: false
@@ -876,7 +876,7 @@ packages:
       '@fastify/merge-json-schemas': 0.2.1
       ajv: 8.18.0
       ajv-formats: 3.0.1(ajv@8.18.0)
-      fast-uri: 3.1.0
+      fast-uri: 3.1.2
       json-schema-ref-resolver: 3.0.0
       rfdc: 1.4.1
     dev: false
@@ -887,8 +887,8 @@ packages:
       fast-decode-uri-component: 1.0.1
     dev: false
 
-  /fast-uri@3.1.0:
-    resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
+  /fast-uri@3.1.2:
+    resolution: {integrity: sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==}
     dev: false
 
   /fastify@5.8.5:
