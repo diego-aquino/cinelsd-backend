@@ -5,7 +5,7 @@ dependencies:
     specifier: ^7.2.1
     version: 7.2.1
   fastify:
-    specifier: ^5.7.3
+    specifier: ^5.8.5
     version: 5.8.5
   pm2:
     specifier: ^7.0.0
@@ -14,7 +14,7 @@ dependencies:
     specifier: ^4.6.8
     version: 4.6.8
   zod:
-    specifier: ^3.21.4
+    specifier: ^3.22.3
     version: 3.22.3
 
 devDependencies:
@@ -549,8 +549,8 @@ packages:
     resolution: {integrity: sha512-Ylo+MAo5BDUq1KA3f3R/MFhh+g8cnHmo8bz3YPGhI1znrMaf77ol1sfvYJzsw3nTE+Y2GryfDxBaR+AqpAkEHQ==}
     dev: false
 
-  /brace-expansion@1.1.11:
-    resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
+  /brace-expansion@1.1.14:
+    resolution: {integrity: sha512-MWPGfDxnyzKU7rNOW9SP/c50vi3xrmrua/+6hfPbCS2ABNWfx24vPidzvC7krjU/RTo235sV776ymlsMtGKj8g==}
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
@@ -1209,7 +1209,7 @@ packages:
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
-      brace-expansion: 1.1.11
+      brace-expansion: 1.1.14
     dev: true
 
   /minimist@1.2.8:
