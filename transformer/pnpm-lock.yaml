@@ -13,8 +13,8 @@ devDependencies:
     specifier: ^1.15.0
     version: 1.15.0
   piscina:
-    specifier: ^4.9.3
-    version: 4.9.3
+    specifier: ^4.9.4
+    version: 4.9.4
   tsx:
     specifier: ^3.12.7
     version: 3.12.7
@@ -536,8 +536,8 @@ packages:
     resolution: {integrity: sha512-MjhiaIWCJ1sAU4pIQ5i5OfOuHHxVo1oYeNsWTON7jxYkod8pHocXeh+SSbmu5OZZZK73B6cbJ2XADzXehLyovQ==}
     dev: true
 
-  /piscina@4.9.3:
-    resolution: {integrity: sha512-3e3ka9QCE8RJ5I9uszdAADZnkcYi21cqmF3gxox3u884N72qpFHCsIVhHt8cEQ9t3Auq/NqoiCEuhxlxxQuDWA==}
+  /piscina@4.9.4:
+    resolution: {integrity: sha512-RyBDr2VheQ8ZfH3N8SzQZHztqVyOtadTwLnUYof6gdj5161/eu2wNhCbGl5GHnNKDpnkicJYpKtL2J+y/gk6XA==}
     optionalDependencies:
       '@napi-rs/nice': 1.1.1
     dev: true

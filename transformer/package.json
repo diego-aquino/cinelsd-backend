@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/node": "^20.1.4",
     "fastq": "^1.15.0",
-    "piscina": "^4.9.3",
+    "piscina": "^4.9.4",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
   }
