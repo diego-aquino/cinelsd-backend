@@ -14,8 +14,8 @@ dependencies:
     specifier: ^4.6.8
     version: 4.6.8
   zod:
-    specifier: ^3.21.4
-    version: 3.22.3
+    specifier: ^4.6.6
+    version: 4.6.6
 
 devDependencies:
   '@types/node':
@@ -1874,6 +1874,6 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /zod@3.22.3:
-    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
+  /zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
     dev: false
